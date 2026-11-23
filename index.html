@@ -425,7 +425,7 @@
           updateStatsUI(result.stats);
         }
       } catch (e) {
-        document.getElementById('st-profit').textContent = 'Ошибка связи';
+        document.getElementById('st-profit').textContent = e.message;
         console.error('Ошибка загрузки статистики:', e);
       }
     }
