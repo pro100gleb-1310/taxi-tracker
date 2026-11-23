@@ -13,63 +13,82 @@
       --hint: var(--tg-theme-hint-color, #6b7280);
       --btn: var(--tg-theme-button-color, #006a63);
       --btn-text: var(--tg-theme-button-text-color, #ffffff);
-      --border: rgba(128, 128, 128, 0.2);
+      --border: rgba(128, 128, 128, 0.22);
     }
-    * {
+
+    *, *::before, *::after {
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    body {
+
+    html, body {
       margin: 0;
-      padding: 14px 14px 28px;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
       background: var(--bg);
       color: var(--text);
     }
+
+    body {
+      padding: 14px 14px 32px;
+    }
+
+    /* Верхнее меню */
     .nav {
       display: grid;
       grid-template-columns: 1fr 1fr;
+      gap: 4px;
       background: var(--card);
       padding: 4px;
-      border-radius: 12px;
+      border-radius: 14px;
       margin-bottom: 14px;
       border: 1px solid var(--border);
     }
     .nav-btn {
-      padding: 10px;
+      padding: 10px 8px;
       border: none;
-      border-radius: 9px;
+      border-radius: 10px;
       background: transparent;
       color: var(--hint);
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
+      transition: 0.15s;
     }
     .nav-btn.active {
       background: var(--btn);
       color: var(--btn-text);
     }
+
+    /* Вкладки направлений */
     .tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
       margin-bottom: 12px;
     }
     .tab {
-      padding: 12px 6px;
+      padding: 12px 4px;
       border: 1px solid var(--border);
       border-radius: 12px;
       background: var(--card);
       color: var(--text);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .tab.active {
       background: var(--btn);
       color: var(--btn-text);
       border-color: var(--btn);
     }
+
+    /* Чипсы сервисов */
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -77,12 +96,13 @@
       margin-bottom: 14px;
     }
     .chip {
-      padding: 9px 15px;
+      padding: 9px 14px;
       border-radius: 20px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
     }
     .chip.active {
@@ -91,6 +111,8 @@
       border-color: var(--btn);
       font-weight: 600;
     }
+
+    /* Карточка формы */
     .card {
       background: var(--card);
       padding: 16px;
@@ -99,36 +121,84 @@
       flex-direction: column;
       gap: 14px;
       border: 1px solid var(--border);
+      width: 100%;
     }
+
+    /* Сетка 2 колонки с жёстким ограничением ширины */
     .row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      width: 100%;
     }
+    .field {
+      min-width: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
     label {
       font-size: 12px;
       color: var(--hint);
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
+      margin-bottom: 6px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+
+    /* Единый стиль для всех инпутов, включая date на iOS/Android */
     input {
+      display: block;
       width: 100%;
-      padding: 12px;
-      border-radius: 10px;
+      min-width: 0;
+      max-width: 100%;
+      height: 46px;
+      padding: 0 12px;
+      border-radius: 11px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text);
       font-size: 16px;
+      line-height: 46px;
       outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="date"] {
+      padding: 0 10px;
+      font-size: 14px;
     }
     input:focus {
       border-color: var(--btn);
     }
+
+    /* Быстрые пресеты сумм для заправки */
+    .presets {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .preset-btn:active {
+      opacity: 0.7;
+    }
+
     .submit-btn {
       margin-top: 16px;
       width: 100%;
-      padding: 15px;
+      height: 50px;
       border: none;
       border-radius: 14px;
       background: var(--btn);
@@ -140,16 +210,19 @@
     .submit-btn:disabled {
       opacity: 0.6;
     }
+
+    /* Экран сводки */
     .kpi-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
     .kpi-card {
       background: var(--card);
-      padding: 15px;
+      padding: 14px;
       border-radius: 14px;
       border: 1px solid var(--border);
+      min-width: 0;
     }
     .kpi-card.full {
       grid-column: 1 / -1;
@@ -162,8 +235,9 @@
       margin-bottom: 5px;
     }
     .kpi-val {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 700;
+      word-break: break-word;
     }
   </style>
 </head>
@@ -186,34 +260,40 @@
 
     <div class="card">
       <div class="row">
-        <div>
-          <label>Дата</label>
+        <div class="field">
+          <label for="date">Дата</label>
           <input type="date" id="date">
         </div>
-        <div>
-          <label>Пробег (км)</label>
+        <div class="field">
+          <label for="mileage">Пробег (км)</label>
           <input type="number" id="mileage" placeholder="0" inputmode="decimal">
         </div>
       </div>
 
       <div class="row" id="incomeBlock">
-        <div>
-          <label>Доход (грн)</label>
+        <div class="field">
+          <label for="income">Доход (₴)</label>
           <input type="number" id="income" placeholder="0" inputmode="decimal">
         </div>
-        <div>
-          <label>Чаевые / Бонусы</label>
+        <div class="field">
+          <label for="tips">Чаевые / Бонусы</label>
           <input type="number" id="tips" placeholder="0" inputmode="decimal">
         </div>
       </div>
 
-      <div id="expenseBlock" style="display:none;">
-        <label>Сумма расхода (грн)</label>
+      <div class="field" id="expenseBlock" style="display:none;">
+        <label for="expense">Сумма расхода (₴)</label>
         <input type="number" id="expense" placeholder="0" inputmode="decimal">
+        <div class="presets">
+          <button type="button" class="preset-btn" onclick="addFuelPreset(300)">+300 ₴</button>
+          <button type="button" class="preset-btn" onclick="addFuelPreset(500)">+500 ₴</button>
+          <button type="button" class="preset-btn" onclick="addFuelPreset(1000)">+1000 ₴</button>
+          <button type="button" class="preset-btn" onclick="setCommentPreset('Полный бак')">Полный бак</button>
+        </div>
       </div>
 
-      <div>
-        <label>Комментарий</label>
+      <div class="field">
+        <label for="comment">Комментарий</label>
         <input type="text" id="comment" placeholder="АЗС, кол-во заказов...">
       </div>
     </div>
@@ -248,7 +328,7 @@
   </div>
 
   <script>
-    // 👇 ВСТАВЬТЕ СЮДА ССЫЛКУ ИЗ GOOGLE APPS SCRIPT 👇
+    // 👇 ВСТАВЬТЕ СЮДА ВАШУ ССЫЛКУ ИЗ GOOGLE APPS SCRIPT 👇
     const API_URL = 'https://script.google.com/macros/s/AKfycbwpGnh7XXsSXE0F03S4IVP6PdLNkncwss627bn7hhjlLAL7bDSddN1ZCjUlJJirUm2zcg/exec';
 
     const tg = window.Telegram.WebApp;
@@ -265,6 +345,17 @@
     let currentService = 'Bolt Такси';
 
     document.getElementById('date').valueAsDate = new Date();
+
+    function addFuelPreset(amount) {
+      const el = document.getElementById('expense');
+      el.value = (Number(el.value) || 0) + amount;
+      if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+
+    function setCommentPreset(text) {
+      document.getElementById('comment').value = text;
+      if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
 
     function switchScreen(screen, btn) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -298,7 +389,7 @@
       el.classList.add('active');
       const isExp = dir === 'Расход';
       document.getElementById('incomeBlock').style.display = isExp ? 'none' : 'grid';
-      document.getElementById('expenseBlock').style.display = isExp ? 'block' : 'none';
+      document.getElementById('expenseBlock').style.display = isExp ? 'flex' : 'none';
       renderServices();
       if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
     }
@@ -338,7 +429,6 @@
       };
 
       try {
-        // Отправляем как text/plain, чтобы избежать CORS preflight-запросов от Google
         const res = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
