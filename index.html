@@ -413,11 +413,19 @@
     }
 
     async function loadStats() {
+      document.getElementById('st-profit').textContent = 'Загрузка...';
       try {
-        const res = await fetch(API_URL);
-        const stats = await res.json();
-        updateStatsUI(stats);
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'getStats' })
+        });
+        const result = await res.json();
+        if (result.stats) {
+          updateStatsUI(result.stats);
+        }
       } catch (e) {
+        document.getElementById('st-profit').textContent = 'Ошибка связи';
         console.error('Ошибка загрузки статистики:', e);
       }
     }
