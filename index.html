@@ -412,22 +412,29 @@
       document.getElementById('st-mileage').textContent = stats.mileage + ' км';
     }
 
-    async function loadStats() {
+    // Загрузка статистики через JSONP (работает без ошибок на iPhone и Android)
+    function loadStats() {
       document.getElementById('st-profit').textContent = 'Загрузка...';
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'getStats' })
-        });
-        const result = await res.json();
-        if (result.stats) {
+      
+      const callbackName = 'tgStatsCallback_' + Date.now();
+      const script = document.createElement('script');
+      
+      window[callbackName] = function(result) {
+        if (result && result.stats) {
           updateStatsUI(result.stats);
         }
-      } catch (e) {
-        document.getElementById('st-profit').textContent = e.message;
-        console.error('Ошибка загрузки статистики:', e);
-      }
+        delete window[callbackName];
+        script.remove();
+      };
+      
+      script.onerror = function() {
+        document.getElementById('st-profit').textContent = 'Нет доступа к таблице';
+        delete window[callbackName];
+        script.remove();
+      };
+      
+      script.src = API_URL + '?callback=' + callbackName;
+      document.body.appendChild(script);
     }
 
     async function save() {
@@ -447,13 +454,13 @@
       };
 
       try {
-        const res = await fetch(API_URL, {
+        // mode: 'no-cors' отправляет данные в таблицу без блокировки редиректа на iOS
+        await fetch(API_URL, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
-        const result = await res.json();
-        if (result.stats) updateStatsUI(result.stats);
 
         if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         tg.showAlert('✅ Запись добавлена в таблицу!', () => {
@@ -464,6 +471,7 @@
           document.getElementById('comment').value = '';
           btn.disabled = false;
           btn.textContent = 'Сохранить в таблицу';
+          loadStats(); // Сразу обновляем статистику после записи
         });
       } catch (err) {
         tg.showAlert('Ошибка отправки: ' + err.message);
